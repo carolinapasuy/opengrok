@@ -100,6 +100,7 @@ import org.opengrok.indexer.util.Statistics;
 public final class Indexer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Indexer.class);
+    private static final Logger MY_LOGGER = LoggerFactory.getCustomLogger("YoNoSoyLogger");
 
     /* tunables for -r (history for remote repositories) */
     private static final String ON = "on";
@@ -168,6 +169,8 @@ public final class Indexer {
         List<String> subFiles = RuntimeEnvironment.getInstance().getSubFiles();
         Set<String> subFilePaths = new HashSet<>();
         Set<String> subFileArgs = new HashSet<>();
+        LOGGER.log(Level.FINEST, "HOLA MUNDO SOY EL LOGGER ORIGINAL");
+        MY_LOGGER.log(Level.FINEST, "HELLO WORLD, IM A CUSTOM LOGGER");
 
         try {
             argv = parseOptions(argv);

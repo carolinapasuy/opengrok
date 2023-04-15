@@ -44,6 +44,15 @@ public class LoggerFactory {
     }
 
     /**
+     * Returns a custom {@link Logger} with the given name.
+     * @param loggerName String
+     * @return logger for given name
+     */
+    public static Logger getCustomLogger(String loggerName) {
+        return loggerFactoryBridge.getCustomLogger(loggerName);
+    }
+
+    /**
      * Injecting bridge to use different logger factory (e.g. in tests).
      * Default access forces to use this method only in the same package.
      * @param loggerFactoryBridge bridge implementation

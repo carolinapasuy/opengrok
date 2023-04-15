@@ -35,4 +35,11 @@ public interface LoggerFactoryBridge {
      * @return logger for given class
      */
     Logger getLogger(Class<?> clazz);
+
+    /**
+     * Returns a custom {@link Logger} with the given name.
+     * @param loggerName String
+     * @return logger for given name
+     */
+    Logger getCustomLogger(String loggerName);
 }

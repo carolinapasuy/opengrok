@@ -43,4 +43,10 @@ class PackageBasedLoggerFactoryBridge implements LoggerFactoryBridge {
     public Logger getLogger(Class<?> clazz) {
         return Logger.getLogger(clazz.getPackage().getName());
     }
+
+
+    @Override
+    public Logger getCustomLogger(String loggerName) {
+        return Logger.getLogger(loggerName);
+    }
 }
