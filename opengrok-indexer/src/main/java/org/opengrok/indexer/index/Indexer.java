@@ -162,6 +162,7 @@ public final class Indexer {
      */
     @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     public static void main(String[] argv) {
+        System.out.println("HOLA MUNDO");
         Statistics stats = new Statistics(); //this won't count JVM creation though
         boolean update = true;
 
@@ -169,12 +170,12 @@ public final class Indexer {
         List<String> subFiles = RuntimeEnvironment.getInstance().getSubFiles();
         Set<String> subFilePaths = new HashSet<>();
         Set<String> subFileArgs = new HashSet<>();
-        LOGGER.log(Level.FINEST, "HOLA MUNDO SOY EL LOGGER ORIGINAL");
-        MY_LOGGER.log(Level.FINEST, "HELLO WORLD, IM A CUSTOM LOGGER");
+        LOGGER.log(Level.INFO, "HOLA MUNDO SOY EL LOGGER ORIGINAL");
+        MY_LOGGER.log(Level.INFO, "HELLO WORLD, IM A CUSTOM LOGGER");
 
         try {
             argv = parseOptions(argv);
-
+            LOGGER.log(Level.FINEST, "HOLA MUNDO SOY EL LOGGER ORIGINAL");
             if (webappURI != null && !HostUtil.isReachable(webappURI, cfg.getConnectTimeout(),
                     cfg.getIndexerAuthenticationToken())) {
                 System.err.println(webappURI + " is not reachable and the -U option was specified, exiting.");

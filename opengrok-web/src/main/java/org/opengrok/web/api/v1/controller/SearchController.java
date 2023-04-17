@@ -96,7 +96,6 @@ public class SearchController {
             long duration = Duration.between(startTime, Instant.now()).toMillis();
 
             int endDocument = startDocIndex + hits.size() - 1;
-
             return new SearchResult(duration, engine.numResults, hits, startDocIndex, endDocument);
         }
     }
