@@ -11,7 +11,10 @@
         <property name="multiLines" value="21"/>
     </module>
     <module name="FileLength"/>
-    <module name="FileTabCharacter"/>
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
 
     <module name="RegexpSingleline">
         <property name="format" value="\s+$"/>

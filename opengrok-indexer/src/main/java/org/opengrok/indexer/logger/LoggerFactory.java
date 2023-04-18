@@ -22,7 +22,10 @@
  */
 package org.opengrok.indexer.logger;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Factory for creating {@link Logger} instances.
@@ -49,7 +52,18 @@ public class LoggerFactory {
      * @return logger for given name
      */
     public static Logger getCustomLogger(String loggerName) {
-        return loggerFactoryBridge.getCustomLogger(loggerName);
+        Logger logger = loggerFactoryBridge.getCustomLogger(loggerName);
+        try {
+            FileHandler fileHandler =
+            new FileHandler("C:\\Users\\santi\\OneDrive\\Documentos\\TECH_CAMP\\Refactoring\\opengrok\\log\\CustomLogger.log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return logger;
     }
 
     /**

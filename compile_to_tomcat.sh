@@ -26,20 +26,23 @@ tar -xzf distribution/target/$opengrok_dist.tar.gz -C $dist
 mv $dist/$opengrok_dist/*/ $dist
 rm -rf $dist/$opengrok_dist
 
-# Restart the tomcat server with the new war file
+# # Restart the tomcat server with the new war file
 $tomcat/bin/shutdown.sh
 rm -rf $tomcat/webapps/source*
 cp $opengrok/etc/logging.properties $tomcat/conf/
 cp $dist/lib/source.war $tomcat/webapps
 $tomcat/bin/startup.sh
 
-old_value="/var/opengrok/etc/configuration.xml"
-new_value="C:\\Users\\santi\\OneDrive\\Documentos\\TECH_CAMP\\Refactoring\\opengrok\\etc\\configuration.xml"
+sleep 5
 
-sed -i "s|<param-name>CONFIGURATION<\/param-name>\n\s*<param-value>$old_value<\/param-value>|<param-name>CONFIGURATION<\/param-name>\n    <param-value>$new_value<\/param-value>|" /e/ProgramFiles/apache-tomcat-10.1.7/webapps/source/WEB-INF/web.xml
+old_value=/var/opengrok/etc/configuration.xml
+new_value=C:\\\\Users\\\\santi\\\\OneDrive\\\\Documentos\\\\TECH_CAMP\\\\Refactoring\\\\opengrok\\\\etc\\\\configuration.xml
+
+sed -i "s-$old_value-$new_value-g" /e/ProgramFiles/apache-tomcat-10.1.7/webapps/source/WEB-INF/web.xml
 
 
 # Configure the jar file
+sleep 5
 java -Djava.util.logging.config.file=$logging_config -jar "$opengrok_jar" -c "$ctags_exe" -s "$src_dir" -d "$data_dir" -H -P -S -G -W "$configuration_xml" -U "$url" 
 
 # java -Djava.util.logging.config.file=~/OneDrive/Documentos/TECH_CAMP/Refactoring/opengrok/etc/logging.properties -jar ~/OneDrive/Documentos/TECH_CAMP/Refactoring/opengrok/dist/lib/opengrok.jar -c ~/OneDrive/Documentos/TECH_CAMP/Refactoring/opengrok/ctags/ctags.exe -s ~/OneDrive/Documentos/TECH_CAMP/Refactoring/opengrok/src -d ~/OneDrive/Documentos/TECH_CAMP/Refactoring/opengrok/data -H -P -S -G -W ~/OneDrive/Documentos/TECH_CAMP/Refactoring/opengrok/etc/configuration.xml -U http://localhost:8080/source
