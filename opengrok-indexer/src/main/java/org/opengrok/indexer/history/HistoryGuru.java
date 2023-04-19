@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,6 @@ import org.opengrok.indexer.configuration.OpenGrokThreadFactory;
 import org.opengrok.indexer.configuration.PathAccepter;
 import org.opengrok.indexer.configuration.RuntimeEnvironment;
 import org.opengrok.indexer.logger.LoggerFactory;
-import org.opengrok.indexer.search.DirectoryEntry;
 import org.opengrok.indexer.util.ForbiddenSymlinkException;
 import org.opengrok.indexer.util.PathUtils;
 import org.opengrok.indexer.util.Statistics;
@@ -337,7 +337,9 @@ public final class HistoryGuru {
                 String hist_rev = he.getRevision();
                 String short_rev = repo.getRevisionForAnnotate(hist_rev);
                 if (revs.contains(short_rev)) {
-                    annotation.addDesc(short_rev, he.getDescription());
+                    annotation.addDesc(short_rev, "changeset: " + he.getRevision()
+                            + "\nsummary: " + he.getMessage() + "\nuser: "
+                            + he.getAuthor() + "\ndate: " + he.getDate());
                     // History entries are coming from recent to older,
                     // file version should be from oldest to newer.
                     annotation.addFileVersion(short_rev, revs.size() - revsMatched);
@@ -345,6 +347,18 @@ public final class HistoryGuru {
                 }
             }
         }
+    }
+
+    /**
+     * Get the appropriate history reader for given file.
+     *
+     * @param file The file to get the history reader for
+     * @throws HistoryException If an error occurs while getting the history
+     * @return A {@link HistoryReader} that may be used to read out history data for a named file
+     */
+    public HistoryReader getHistoryReader(File file) throws HistoryException {
+        History history = getHistory(file, false);
+        return history == null ? null : new HistoryReader(history);
     }
 
     /**
@@ -712,35 +726,17 @@ public final class HistoryGuru {
 
     /**
      * Get the last modified times for all files and subdirectories in the specified directory.
-     * If the related {@link Repository} instance does not exist or if it is capable or merge commits,
-     * however merge commits are disabled in its properties, empty map will be returned.
+     *
      * @param directory the directory whose files to check
-     * @param entries list of {@link DirectoryEntry} instances
-     * @return a map from file names to {@link HistoryEntry} instance for the files that
+     * @return a map from file names to modification times for the files that
      * the history cache has information about
      * @throws org.opengrok.indexer.history.CacheException if history cannot be retrieved
      */
-    public Map<String, HistoryEntry> getLastHistoryEntries(File directory, List<DirectoryEntry> entries) throws CacheException {
-
-        if (!env.isUseHistoryCacheForDirectoryListing()) {
-            LOGGER.log(Level.FINEST, "using history cache to retrieve last modified times for ''{0}}'' is disabled",
-                    directory);
-            return Collections.emptyMap();
-        }
+    public Map<String, Date> getLastModifiedTimes(File directory) throws CacheException {
 
         Repository repository = getRepository(directory);
         if (repository == null) {
             LOGGER.log(Level.FINEST, "cannot find repository for ''{0}}'' to retrieve last modified times",
-                    directory);
-            return Collections.emptyMap();
-        }
-
-        // Do not use history cache for repositories with merge commits disabled as some files in the repository
-        // could be introduced and changed solely via merge changesets. The call would presumably fall back
-        // to file system based time stamps, however that might be confusing, so avoid that.
-        if (repository.isMergeCommitsSupported() && !repository.isMergeCommitsEnabled()) {
-            LOGGER.log(Level.FINEST,
-                    "will not retrieve last modified times due to merge changesets disabled for ''{0}}''",
                     directory);
             return Collections.emptyMap();
         }
@@ -751,7 +747,7 @@ public final class HistoryGuru {
             return Collections.emptyMap();
         }
 
-        return historyCache.getLastHistoryEntries(entries);
+        return historyCache.getLastModifiedTimes(directory, repository);
     }
 
     /**
@@ -910,26 +906,6 @@ public final class HistoryGuru {
         return repositories.values().stream().map(RepositoryInfo::new).collect(Collectors.toSet());
     }
 
-    /**
-     * Store history for a file into history cache. If the related repository does not support
-     * getting the history for directories, it will return right away without storing the history.
-     * @param file file
-     * @param history {@link History} instance
-     */
-    public void storeHistory(File file, History history) {
-        Repository repository = getRepository(file);
-        if (repository.hasHistoryForDirectories()) {
-            return;
-        }
-
-        try {
-            historyCache.storeFile(history, file, repository);
-        } catch (HistoryException e) {
-            LOGGER.log(Level.WARNING,
-                    String.format("cannot create history cache for '%s' in repository %s", file, repository), e);
-        }
-    }
-
     private void createHistoryCache(Repository repository, String sinceRevision) {
         String path = repository.getDirectoryName();
         String type = repository.getClass().getSimpleName();
@@ -1051,23 +1027,13 @@ public final class HistoryGuru {
     /**
      * Clear entry for single file from history cache.
      * @param path path to the file relative to the source root
-     * @param removeHistory whether to remove history cache entry for the path
      */
-    public void clearHistoryCacheFile(String path, boolean removeHistory) {
+    public void clearHistoryCacheFile(String path) {
         if (!useHistoryCache()) {
             return;
         }
 
-        Repository repository = getRepository(new File(env.getSourceRootFile(), path));
-        if (repository == null) {
-            return;
-        }
-
-        // Repositories that do not support getting history for directories do not undergo
-        // incremental history cache generation, so for these the removeHistory parameter is not honored.
-        if (!repository.hasHistoryForDirectories() || removeHistory) {
-            historyCache.clearFile(path);
-        }
+        historyCache.clearFile(path);
     }
 
     /**

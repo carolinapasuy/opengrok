@@ -43,6 +43,12 @@ import org.opengrok.web.PageConfig;
 import org.opengrok.web.api.v1.filter.CorsEnable;
 import org.opengrok.web.api.v1.suggester.provider.service.SuggesterService;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -97,9 +103,40 @@ public class SearchController {
 
             int endDocument = startDocIndex + hits.size() - 1;
 
-            return new SearchResult(duration, engine.numResults, hits, startDocIndex, endDocument);
+            SearchResult resultado = new SearchResult(duration, engine.numResults, hits, startDocIndex, endDocument);
+
+            String jsonString = new Gson().toJson(resultado);
+
+            JsonElement root = JsonParser.parseString(jsonString);
+
+            imprimirElemento(root, "");
+
+            return resultado;
         }
     }
+
+    private static void imprimirElemento(JsonElement elemento, String indentacion) {
+        if (elemento.isJsonArray()) {
+            JsonArray array = elemento.getAsJsonArray();
+            System.out.println(indentacion + "[");
+            for (JsonElement subelemento : array) {
+                imprimirElemento(subelemento, indentacion + "  ");
+            }
+            System.out.println(indentacion + "]");
+        } else if (elemento.isJsonObject()) {
+            JsonObject objeto = elemento.getAsJsonObject();
+            System.out.println(indentacion + "{");
+            for (String nombre : objeto.keySet()) {
+                JsonElement valor = objeto.get(nombre);
+                System.out.println(indentacion + "  " + nombre + ":");
+                imprimirElemento(valor, indentacion + "    ");
+            }
+            System.out.println(indentacion + "}");
+        } else {
+            System.out.println(indentacion + elemento.toString());
+        }
+    }
+
 
     private static class SearchEngineWrapper implements AutoCloseable {
 

@@ -193,9 +193,8 @@ document.pageReady.push(function() { pageReadyList();});
 
             List<String> readMes = dl.extraListTo(Util.uriEncodePath(request.getContextPath()),
                     resourceFile, out, path, entries);
-
             File[] catfiles = cfg.findDataFiles(readMes);
-            for (int i = 0; i < catfiles.length; i++) {
+            for (int i=0; i < catfiles.length; i++) {
                 if (catfiles[i] == null) {
                     continue;
                 }

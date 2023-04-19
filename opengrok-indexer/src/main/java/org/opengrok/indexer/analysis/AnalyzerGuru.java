@@ -634,15 +634,17 @@ public class AnalyzerGuru {
     private static void populateDocumentHistory(Document doc, File file) {
         try {
             HistoryGuru histGuru = HistoryGuru.getInstance();
-            History history = histGuru.getHistory(file, false);
-            if (history != null) {
-                HistoryReader hr = new HistoryReader(history);
+            HistoryReader hr = histGuru.getHistoryReader(file);
+            if (hr != null) {
                 doc.add(new TextField(QueryBuilder.HIST, hr));
-                HistoryEntry histEntry = history.getLastHistoryEntry();
-                if (histEntry != null) {
-                    doc.add(new TextField(QueryBuilder.LASTREV, histEntry.getRevision(), Store.YES));
+                History history;
+                if ((history = histGuru.getHistory(file)) != null) {
+                    List<HistoryEntry> historyEntries = history.getHistoryEntries(1, 0);
+                    if (!historyEntries.isEmpty()) {
+                        HistoryEntry histEntry = historyEntries.get(0);
+                        doc.add(new TextField(QueryBuilder.LASTREV, histEntry.getRevision(), Store.YES));
+                    }
                 }
-                histGuru.storeHistory(file, history);
             }
         } catch (HistoryException e) {
             LOGGER.log(Level.WARNING, "An error occurred while reading history: ", e);

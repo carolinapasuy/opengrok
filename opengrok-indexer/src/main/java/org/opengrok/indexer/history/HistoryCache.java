@@ -23,11 +23,10 @@
 package org.opengrok.indexer.history;
 
 import java.io.File;
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
-import org.opengrok.indexer.search.DirectoryEntry;
 
 interface HistoryCache extends Cache {
 
@@ -50,7 +49,6 @@ interface HistoryCache extends Cache {
      * @param file The file to retrieve history for
      * @throws CacheException if the history cache cannot be read
      */
-    @Nullable
     HistoryEntry getLastHistoryEntry(File file) throws CacheException;
 
     /**
@@ -73,16 +71,6 @@ interface HistoryCache extends Cache {
     void store(History history, Repository repository, @Nullable String tillRevision) throws CacheException;
 
     /**
-     * Store the history for a file in given repository.
-     *
-     * @param history The history to store
-     * @param file file
-     * @param repository The repository whose history to store
-     * @throws HistoryException if the history cannot be stored
-     */
-    void storeFile(History history, File file, Repository repository) throws HistoryException;
-
-    /**
      * Get the revision identifier for the latest cached revision in a repository.
      *
      * @param repository the repository whose latest revision to return
@@ -95,11 +83,12 @@ interface HistoryCache extends Cache {
      * Get the last modified times for all files and subdirectories in the
      * specified directory.
      *
-     * @param entries list of {@link DirectoryEntry} instances
-     * @return a map from file names to {@link HistoryEntry} instance
+     * @param directory which directory to fetch modification times for
+     * @param repository the repository in which the directory lives
+     * @return a map from file names to modification times
      * @throws CacheException on error
      */
-    Map<String, HistoryEntry> getLastHistoryEntries(List<DirectoryEntry> entries) throws CacheException;
+    Map<String, Date> getLastModifiedTimes(File directory, Repository repository) throws CacheException;
 
     /**
      * Clear entry for single file from history cache.

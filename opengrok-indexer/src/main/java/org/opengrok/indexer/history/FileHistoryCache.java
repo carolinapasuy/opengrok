@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -65,7 +66,6 @@ import org.opengrok.indexer.Metrics;
 import org.opengrok.indexer.configuration.PathAccepter;
 import org.opengrok.indexer.configuration.RuntimeEnvironment;
 import org.opengrok.indexer.logger.LoggerFactory;
-import org.opengrok.indexer.search.DirectoryEntry;
 import org.opengrok.indexer.util.Progress;
 import org.opengrok.indexer.util.Statistics;
 
@@ -290,11 +290,6 @@ class FileHistoryCache extends AbstractCache implements HistoryCache {
 
     private static File getTagsFile(File file) {
         return new File(file.getAbsolutePath() + ".t");
-    }
-
-    @Override
-    public void storeFile(History history, File file, Repository repository) throws HistoryException {
-        storeFile(history, file, repository, false);
     }
 
     /**
@@ -655,10 +650,6 @@ class FileHistoryCache extends AbstractCache implements HistoryCache {
     @Override
     public History get(File file, Repository repository, boolean withFiles) throws CacheException {
 
-        if (file.isDirectory()) {
-            return null;
-        }
-
         if (isUpToDate(file)) {
             File cacheFile = getCachedFile(file);
             try {
@@ -666,7 +657,7 @@ class FileHistoryCache extends AbstractCache implements HistoryCache {
                     fileHistoryCacheHits.increment();
                 }
                 return readHistory(cacheFile, repository);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOGGER.log(Level.WARNING, String.format("Error when reading cache file '%s'", cacheFile), e);
             }
         }
@@ -679,7 +670,6 @@ class FileHistoryCache extends AbstractCache implements HistoryCache {
     }
 
     @Override
-    @Nullable
     public HistoryEntry getLastHistoryEntry(File file) throws CacheException {
         if (isUpToDate(file)) {
             File cacheFile = getCachedFile(file);
@@ -688,7 +678,7 @@ class FileHistoryCache extends AbstractCache implements HistoryCache {
                     fileHistoryCacheHits.increment();
                 }
                 return readLastHistoryEntry(cacheFile);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOGGER.log(Level.WARNING, String.format("Error when reading cache file '%s'", cacheFile), e);
             }
         }
@@ -772,32 +762,11 @@ class FileHistoryCache extends AbstractCache implements HistoryCache {
     }
 
     @Override
-    public Map<String, HistoryEntry> getLastHistoryEntries(List<DirectoryEntry> entries) {
-        if (entries == null) {
-            return Collections.emptyMap();
-        }
-
-        Map<String, HistoryEntry> map = new HashMap<>();
-        for (DirectoryEntry directoryEntry : entries) {
-            try {
-                File file = directoryEntry.getFile();
-                if (file.isDirectory()) {
-                    continue;
-                }
-
-                HistoryEntry historyEntry = getLastHistoryEntry(file);
-                if (historyEntry != null && historyEntry.getDate() != null) {
-                    map.put(directoryEntry.getFile().getName(), historyEntry);
-                } else {
-                    LOGGER.log(Level.FINE, "cannot get last history entry for ''{0}''",
-                            directoryEntry.getFile());
-                }
-            } catch (CacheException e) {
-                LOGGER.log(Level.FINER, "cannot get last history entry for ''{0}''", directoryEntry.getFile());
-            }
-        }
-
-        return map;
+    public Map<String, Date> getLastModifiedTimes(File directory, Repository repository) {
+        // We don't have a good way to get this information from the file
+        // cache, so leave it to the caller to find a reasonable time to
+        // display (typically the last modified time on the file system).
+        return Collections.emptyMap();
     }
 
     @Override

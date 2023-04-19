@@ -98,6 +98,7 @@ RUN sed -i -e 's/Valve/Disabled/' /usr/local/tomcat/conf/server.xml
 
 # add our scripts and configuration
 COPY docker /scripts
+RUN apt-get update && apt-get install dos2unix && dos2unix /scripts/*
 RUN chmod -R +x /scripts
 
 # run

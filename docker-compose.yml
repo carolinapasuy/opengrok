@@ -1,0 +1,14 @@
+version: "3"
+
+# More info at https://github.com/oracle/opengrok/docker/
+services:
+  opengrok:
+    container_name: opengrok
+    image: carito/opengrok:latest
+    ports:
+      - "8081:8080/tcp"
+    # Volumes store your data between container upgrades
+    volumes:
+       - '/opengrok/src/:/opengrok/src/'  # source code
+       - '/opengrok/etc/:/opengrok/etc/'  # folder contains configuration.xml
+       - '/opengrok/data/:/opengrok/data/'  # index and other things for source code

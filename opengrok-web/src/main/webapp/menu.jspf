@@ -224,6 +224,8 @@ document.domReady.push(function() { domReadyMenu(); });
            type="button" value="Help"/>
     <input tabindex="12" class="submit btn" onclick="window.open('settings.jsp', '_self');"
            type="button" value="Settings"/>
+    <input tabindex="12" class="submit btn" onclick="window.open('reference.jsp', '_self');"
+           type="button" value="References"/>
 </div>
 </div>
 <div id="ltbl">
