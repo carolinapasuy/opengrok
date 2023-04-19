@@ -14,83 +14,27 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 <%@ include file="/httpheader.jspf" %>
 <head>
     <script>
-        var showDiv1 = true;
-        var showDiv2 = false;
-        var showDiv3 = false;
-        var showDiv4 = false;
-        var showDiv5 = false;
-
-        function toggleDivs() {
-            if (showDiv1) {
-                document.getElementById("div1").style.display = "block";
-            } else {
-                document.getElementById("div1").style.display = "none";
-            }
-            if (showDiv2) {
-                document.getElementById("div2").style.display = "block";
-            } else {
-                document.getElementById("div2").style.display = "none";
-            }
-            if (showDiv3) {
-                document.getElementById("div3").style.display = "block";
-            } else {
-                document.getElementById("div3").style.display = "none";
-            }
-            if (showDiv4) {
-                document.getElementById("div4").style.display = "block";
-            } else {
-                document.getElementById("div4").style.display = "none";
-            }
-            if (showDiv5) {
-                document.getElementById("div5").style.display = "block";
-            } else {
-                document.getElementById("div5").style.display = "none";
-            }
+        function showDiv(id) {
+            var div = document.getElementById(id);
+            div.style.display = "block";
         }
 
-        function toggleDiv1() {
-            showDiv1 = true;
-            showDiv2 = false;
-            showDiv3 = false;
-            showDiv4 = false;
-            showDiv5 = false;
-            toggleDivs();
+        function hideDiv(id) {
+            var div = document.getElementById(id);
+            div.style.display = "none";
         }
 
-        function toggleDiv2() {
-            showDiv1 = false;
-            showDiv2 = true;
-            showDiv3 = false;
-            showDiv4 = false;
-            showDiv5 = false;
-            toggleDivs();
-        }
-
-        function toggleDiv3() {
-            showDiv1 = false;
-            showDiv2 = false;
-            showDiv3 = true;
-            showDiv4 = false;
-            showDiv5 = false;
-            toggleDivs();
-        }
-
-        function toggleDiv4() {
-            showDiv1 = false;
-            showDiv2 = false;
-            showDiv3 = false;
-            showDiv4 = true;
-            showDiv5 = false;
-            toggleDivs();
-        }
-
-        function toggleDiv5() {
-            showDiv1 = false;
-            showDiv2 = false;
-            showDiv3 = false;
-            showDiv4 = false;
-            showDiv5 = true;
-            toggleDivs();
+        function toggleDiv(id) {
+            var div = document.getElementById(id);
+            if (div.style.display === "none") {
+                showDiv(id);
+            }
+            var divIds = ["div1", "div2", "div3", "div4", "div5"];
+            for (var i = 0; i < divIds.length; i++) {
+                if (divIds[i] !== id) {
+                    hideDiv(divIds[i]);
+                }
+            }
         }
     </script>
 </head>
@@ -106,15 +50,15 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
         <div id="sbar"></div>
         <div style="padding-left: 1rem;">
             <h1>Results:</h1>
-            <a href="#" onclick="toggleDiv1()">AccountService</a>->
-            <a href="#" onclick="toggleDiv2()">AccountController</a>->
-            <a href="#" onclick="toggleDiv3()">AccountService</a>->
-            <a href="#" onclick="toggleDiv4()">AccountRepository</a>->
-            <a href="#" onclick="toggleDiv5()">INSERT_PIONEER_PRICE</a>
+            <a href="#" onclick="toggleDiv('div1')">AccountService</a>->
+            <a href="#" onclick="toggleDiv('div2')">AccountController</a>->
+            <a href="#" onclick="toggleDiv('div3')">AccountService</a>->
+            <a href="#" onclick="toggleDiv('div4'">AccountRepository</a>->
+            <a href="#" onclick="toggleDiv('div5')">INSERT_PIONEER_PRICE</a>
             <br>
             <br>
             <br>
-            <div id="div1" style="width: 1200px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word;">
+            <div id="div1" style="width: 1200px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word; display: block">
                 <pre>
 21  createPricePioner(PricePioneerDTO:pricePioneer):Observable<void>{ 
 22    return this.httpClient.post<void>(this.baseUrl+"create",pricePioneer)
@@ -122,7 +66,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 24  }
               </pre>
             </div>
-            <div id="div2" style="width: 1200px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word;">
+            <div id="div2" style="width: 1200px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word; display: none">
                 <pre>
 8	@Override
 9	@RequestMapping(value = "/pricePioneer/create", method = RequestMethod.POST)
@@ -134,7 +78,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
               </pre>
             </div>
 
-            <div id="div3" style="width: 1200px; border: 1px solid black; font-size: 15px;">
+            <div id="div3" style="width: 1200px; border: 1px solid black; font-size: 15px; display: none">
                 <pre>
 17	@Override
 18	public void save(PricePioneer pricePioneer) {		
@@ -142,7 +86,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 20	}
               </pre>
             </div>
-            <div id="div4" style="width: 1200px; border: 1px solid black; font-size: 15px;">
+            <div id="div4" style="width: 1200px; border: 1px solid black; font-size: 15px; display: none">
                 <pre>
 13		@Override
 14	public void save(PricePioneer pricePioneer) {
@@ -154,7 +98,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 21	}
               </pre>
             </div>
-            <div id="div5" style="width: 1200px; border: 1px solid black; font-size: 15px;overflow-wrap: break-word;">
+            <div id="div5" style="width: 1200px; border: 1px solid black; font-size: 15px;overflow-wrap: break-word; display: none">
                 <pre>
 2  CREATE OR REPLACE EDITIONABLE PROCEDURE "APP_LIQ_PRECIOS"."INSERT_PIONEER_PRICE" 
 3(
