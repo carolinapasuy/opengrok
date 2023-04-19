@@ -13,12 +13,12 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 %>
 <%@ include file="/httpheader.jspf" %>
 <head>
-	<script>
-		var showDiv1 = true;
+    <script>
+        var showDiv1 = true;
         var showDiv2 = false;
         var showDiv3 = false;
         var showDiv4 = false;
-		var showDiv5 = false;
+        var showDiv5 = false;
 
         function toggleDivs() {
             if (showDiv1) {
@@ -41,7 +41,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
             } else {
                 document.getElementById("div4").style.display = "none";
             }
-			if (showDiv5) {
+            if (showDiv5) {
                 document.getElementById("div5").style.display = "block";
             } else {
                 document.getElementById("div5").style.display = "none";
@@ -53,7 +53,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
             showDiv2 = false;
             showDiv3 = false;
             showDiv4 = false;
-			showDiv5 = false;
+            showDiv5 = false;
             toggleDivs();
         }
 
@@ -62,7 +62,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
             showDiv2 = true;
             showDiv3 = false;
             showDiv4 = false;
-			showDiv5 = false;
+            showDiv5 = false;
             toggleDivs();
         }
 
@@ -71,7 +71,7 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
             showDiv2 = false;
             showDiv3 = true;
             showDiv4 = false;
-			showDiv5 = false;
+            showDiv5 = false;
             toggleDivs();
         }
 
@@ -80,46 +80,50 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
             showDiv2 = false;
             showDiv3 = false;
             showDiv4 = true;
-			showDiv5 = false;
+            showDiv5 = false;
             toggleDivs();
         }
-		function toggleDiv5() {
+
+        function toggleDiv5() {
             showDiv1 = false;
             showDiv2 = false;
             showDiv3 = false;
             showDiv4 = false;
-			showDiv3 = true;
+            showDiv5 = true;
             toggleDivs();
         }
+    </script>
+</head>
 
-	</script>
-  </head>
-<body>
+<body  onload="toggleDiv1()">
     <div id="page">
         <header id="whole_header">
             <%@include file="/pageheader.jspf" %>
-            <div id="Masthead">
-                <a href="<%= request.getContextPath() %>/"><span id="home"></span>Home</a>
-            </div>
+                <div id="Masthead">
+                    <a href="<%= request.getContextPath() %>/"><span id="home"></span>Home</a>
+                </div>
         </header>
         <div id="sbar"></div>
         <div style="padding-left: 1rem;">
             <h1>Results:</h1>
-			<span onclick="toggleDiv1()">AccountService.js</span> -> 
-			<span onclick="toggleDiv2()">AccountController</span> -> 
-			<span onclick="toggleDiv3()">AccountService</span> -> 
-			<span onclick="toggleDiv4()">AccountRepository</span> -> 
-			<span onclick="toggleDiv5()">INSERT_PIONEER_PRICE</span>
-          <div id="div1" style="width: 1300px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word;">
-            <pre>
+            <a href="#" onclick="toggleDiv1()">AccountService</a>->
+            <a href="#" onclick="toggleDiv2()">AccountController</a>->
+            <a href="#" onclick="toggleDiv3()">AccountService</a>->
+            <a href="#" onclick="toggleDiv4()">AccountRepository</a>->
+            <a href="#" onclick="toggleDiv5()">INSERT_PIONEER_PRICE</a>->
+            <br>
+            <br>
+            <br>
+            <div id="div1" style="width: 1200px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word;">
+                <pre>
   createPricePioner(PricePioneerDTO:pricePioneer):Observable<void>{ 
     return this.httpClient.post<void>(this.baseUrl+"create",pricePioneer)
 
   }
               </pre>
-</div>
- <div id="div2" style="width: 1300px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word;">
-            <pre>
+            </div>
+            <div id="div2" style="width: 1200px; border: 1px solid black;  font-size: 15px;overflow-wrap: break-word;">
+                <pre>
 	@Override
 	@RequestMapping(value = "/pricePioneer/create", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@RequestBody PricePioneer pricePioneer) {		
@@ -127,18 +131,18 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 		return new ResponseEntity("Ok",HttpStatus.CREATED);		
 	}
               </pre>
-</div>    
-   
-    <div id="div3" style="width: 1300px; border: 1px solid black; font-size: 15px;">
-            <pre>
+            </div>
+
+            <div id="div3" style="width: 1200px; border: 1px solid black; font-size: 15px;">
+                <pre>
 	@Override
 	public void save(PricePioneer pricePioneer) {		
 		pricePioneerRepository.save(pricePioneer);
 	}
               </pre>
-</div> 
-       <div id="div4" style="width: 1300px; border: 1px solid black; font-size: 15px;">
-            <pre>
+            </div>
+            <div id="div4" style="width: 1200px; border: 1px solid black; font-size: 15px;">
+                <pre>
 		@Override
 	public void save(PricePioneer pricePioneer) {
 		jdbcTemplate.update("CALL insert_pioneer_price(?, ?, ?,?,?,?)", 
@@ -148,9 +152,9 @@ Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
 
 	}
               </pre>
-</div> 
-          <div id="div5" style="width: 1300px; border: 1px solid black; font-size: 15px;overflow-wrap: break-word;">
-            <pre>
+            </div>
+            <div id="div5" style="width: 1200px; border: 1px solid black; font-size: 15px;overflow-wrap: break-word;">
+                <pre>
   CREATE OR REPLACE EDITIONABLE PROCEDURE "APP_LIQ_PRECIOS"."INSERT_PIONEER_PRICE" 
 (
     name_implement           VARCHAR2,
@@ -173,10 +177,11 @@ BEGIN
 
 END;
               </pre>
-</div> 
+            </div>
         </div>
     </div>
 </body>
 
 </html>
+
 <%@include file="/foot.jspf" %>

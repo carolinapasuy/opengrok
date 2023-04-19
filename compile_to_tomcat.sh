@@ -34,8 +34,8 @@ cp $dist/lib/source.war $tomcat/webapps
 $tomcat/bin/startup.bat
 sleep 5
 
-old_value=/var/opengrok/etc/configuration.xml
-new_value=C:\\\\Users\\\\santi\\\\OneDrive\\\\Documentos\\\\TECH_CAMP\\\\Refactoring\\\\opengrok\\\\etc\\\\configuration.xml
+old_value=/opengrok/etc/configuration.xml
+new_value=/opengrok/etc/configuration.xml
 
 sed -i "s-$old_value-$new_value-g" /c/Apache-Software-Foundation/Tomcat-10.1/webapps/source/WEB-INF/web.xml
 
