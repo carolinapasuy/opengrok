@@ -259,6 +259,7 @@ public final class Results {
         out.write("</tbody>");
     }
 
+
     private static void printLastEditedDate(final Writer out, final Document doc) throws IOException {
         try {
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);

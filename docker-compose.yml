@@ -4,11 +4,11 @@ version: "3"
 services:
   opengrok:
     container_name: opengrok
-    image: carito/opengrok:latest
+    image: marlon:latest
     ports:
-      - "8081:8080/tcp"
+      - "8081:8080/tcp" 
     # Volumes store your data between container upgrades
     volumes:
-       - '/opengrok/src/:/opengrok/src/'  # source code
-       - '/opengrok/etc/:/opengrok/etc/'  # folder contains configuration.xml
-       - '/opengrok/data/:/opengrok/data/'  # index and other things for source code
+       - 'C:/Users/1005896017/Documents/opengrok/src/:/opengrok/src/'  # source code
+       - 'C:/Users/1005896017/Documents/opengrok/etc/:/opengrok/etc/'  # folder contains configuration.xml
+       - 'C:/Users/1005896017/Documents/opengrok/data/:/opengrok/data/'  # index and other things for source code

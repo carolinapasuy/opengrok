@@ -55,6 +55,11 @@ Portions Copyright (c) 2018, 2020, Chris Fraire <cfraire@me.com>.
             <classifier>tests</classifier>
             <type>test-jar</type>
             <scope>test</scope>
+        </dependency>     
+        <dependency>
+            <groupId>fr.inria.gforge.spoon</groupId>
+            <artifactId>spoon-core</artifactId>
+            <version>8.0.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
